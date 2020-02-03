@@ -1,33 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
-const Header = props => {
-  return (
-    <header>
-      <h1>{props.course}</h1>
-    </header>
-  );
-};
-
-const Content = props => {
-  return (
-    <>
-      {props.content.map(exercise => (
-        <p key={exercise[0]}>
-          {exercise[0]} {exercise[1]}
-        </p>
-      ))}
-    </>
-  );
-};
-
-const Total = props => {
-  const total = props.exercises.reduce(
-    (previous, current) => previous + current,
-  );
-
-  return <p>Number of exercises {total}</p>;
-};
+import { Content } from "./components/Content";
+import { Header } from "./components/Header";
+import { Total } from "./components/Total";
 
 const App = () => {
   const course = "Half Stack application development";
