@@ -1,11 +1,9 @@
 import React from "react";
 
-const Total = props => {
-  const total = props.exercises.reduce(
-    (previous, current) => previous + current,
-  );
+export const Total = props => {
+  const total = props.parts
+    .map(part => part.exercises)
+    .reduce((prev, curr) => prev + curr);
 
   return <p>Number of exercises {total}</p>;
 };
-
-export default Total;
