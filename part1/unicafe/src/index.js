@@ -7,13 +7,25 @@ const Button = (props) => (
   </button>
 )
 
-const Statistics = ({ good, neutral, bad }) => (
-  <div>
-    <div>{`good ${good}`}</div>
-    <div>{`neutral ${neutral}`}</div>
-    <div>{`bad ${bad}`}</div>
-  </div>
-)
+const Statistics = ({ good, neutral, bad }) => {
+  const all = good + neutral + bad
+  const goodWeight = good * 1
+  const badWeight = bad * -1
+  const average = all > 0 ? (goodWeight + badWeight) / all : 'N/A'
+  const positive = all > 0 ? `${good / all * 100}%` : 'N/A'
+
+  return (
+    <div>
+      <div>{`good ${good}`}</div>
+      <div>{`neutral ${neutral}`}</div>
+      <div>{`bad ${bad}`}</div>
+      <div>{`all ${all}`}</div>
+      <div>{`average ${average}`}</div>
+      <div>{`positive ${positive}`}</div>
+    </div>
+  )
+}
+
 const Title = ({ title }) => (
   <h1>{title}</h1>
 )
