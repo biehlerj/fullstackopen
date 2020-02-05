@@ -1,0 +1,9 @@
+{
+  "eslint.options": {
+    "rules": {
+      "semi": [1, "always"],
+      "comma-dangle": [1, "always-multiline"],
+      "quotes": [1, "single"]
+    }
+  }
+}
