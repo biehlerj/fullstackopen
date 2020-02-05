@@ -1,29 +1,35 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-const Button = (props) => (
-  <button onClick={props.handleClick}>
-    {props.text}
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
   </button>
+)
+
+const Statistic = ({ text, value }) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 )
 
 const Statistics = ({ good, neutral, bad }) => {
   const all = good + neutral + bad
-  const goodWeight = good * 1
-  const badWeight = bad * -1
-  const average = all > 0 ? (goodWeight + badWeight) / all : 'N/A'
-  const positive = all > 0 ? `${good / all * 100}%` : 'N/A'
+  const average = (good + bad * (-1)) / all
+  const positive = (good / all) * 100
 
   if (all > 0) {
     return (
-      <div>
-        <div>{`good ${good}`}</div>
-        <div>{`neutral ${neutral}`}</div>
-        <div>{`bad ${bad}`}</div>
-        <div>{`all ${all}`}</div>
-        <div>{`average ${average}`}</div>
-        <div>{`positive ${positive}`}</div>
-      </div>
+      <table>
+        <tbody>
+          <Statistic text="good" value={good} />
+          <Statistic text="neutral" value={neutral} />
+          <Statistic text="bad" value={bad} />
+          <Statistic text="average" value={average} />
+          <Statistic text="positive" value={positive} />
+        </tbody>
+      </table>
     )
 
   } else {
