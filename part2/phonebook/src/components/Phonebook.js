@@ -46,9 +46,6 @@ const Phonebook = ({
 
   return (
     <>
-      <h2>Phonebook</h2>
-      <p>filter shown with <input onChange={handleFilter} /></p>
-      {!showAll ? <button onClick={() => setShowAll(!showAll)}>reset</button> : <></>}
       <form onSubmit={addName}>
         <div>name: <input value={newName} onChange={handleNameChange} /></div>
         <div>number: <input value={newNumber} onChange={handleNewNumber} /></div>

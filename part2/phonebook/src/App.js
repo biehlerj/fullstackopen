@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import Numbers from './components/Numbers';
-import Phonebook from './components/Phonebook';
+import Filter from './components/Filter';
+import Persons from './components/Persons';
+import PersonForm from './components/PersonForm';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -21,20 +22,55 @@ const App = () => {
     return toFilter.includes(toSearch);
   });
 
+  const addName = (event) => {
+    event.preventDefault();
+    if (_existingContact(newName, persons))
+      alert(`${newName} is already added to phonebook`);
+    else
+      setPersons(persons.concat({ name: newName, number: newNumber }));
+    setNewName('');
+    setNewNumber('');
+  };
+
+  const _existingContact = (name, data) => {
+    let exists = data.find(entry => entry.name === name);
+
+    if (exists === undefined)
+      return false;
+    else
+      return true;
+  };
+
+  const handleNameChange = (event) => {
+    setNewName(event.target.value);
+  };
+
+  const handleNewNumber = (event) => {
+    setNewNumber(event.target.value);
+  };
+
+  const handleFilter = (event) => {
+    setFilterName(event.target.value);
+    setShowAll(false);
+  };
+
   return (
     <div>
-      <Phonebook
+      <h2>Phonebook</h2>
+
+      <Filter onChangeHandler={handleFilter} />
+
+      <PersonForm
+        onSubmitHandler={addName}
         newName={newName}
-        setNewName={setNewName}
+        onChangeNameHandler={handleNameChange}
         newNumber={newNumber}
-        setNewNumber={setNewNumber}
-        setFilterName={setFilterName}
-        showAll={showAll}
-        setShowAll={setShowAll}
-        persons={persons}
-        setPersons={setPersons}
+        onChangeNumberHandler={handleNewNumber}
       />
-      <Numbers persons={entriesToShow} />
+
+      <h3>Numbers</h3>
+
+      <Persons persons={entriesToShow} />
     </div>
   );
 };
