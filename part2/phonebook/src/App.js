@@ -7,10 +7,11 @@ const App = () => {
     { name: 'Arto Hellas' },
   ]);
   const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
 
   return (
     <div>
-      <Phonebook newName={newName} setNewName={setNewName} persons={persons} setPersons={setPersons} />
+      <Phonebook newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} persons={persons} setPersons={setPersons} />
       <Numbers persons={persons} />
     </div>
   );
