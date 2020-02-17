@@ -4,8 +4,20 @@ const Phonebook = ({ newName, setNewName, persons, setPersons }) => {
 
   const addName = (event) => {
     event.preventDefault();
-    setPersons(persons.concat({ name: newName }));
+    if (_existingContact(newName, persons))
+      alert(`${newName} is already added to phonebook`);
+    else
+      setPersons(persons.concat({ name: newName }));
     setNewName('');
+  };
+
+  const _existingContact = (name, data) => {
+    let exists = data.find(entry => entry.name === name);
+
+    if (exists === undefined)
+      return false;
+    else
+      return true;
   };
 
   const handleNameChange = (event) => {
