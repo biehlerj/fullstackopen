@@ -1,11 +1,3 @@
 {
-  "eslint.options": {
-    "rules": {
-      "semi": [1, "always"],
-      "comma-dangle": [1, "always-multiline"],
-      "max-len": [1, { "code": 105 }]
-    }
-  },
-  "eslint.autoFix": true,
-  "prettier.printWidth": 105
+  "eslint.packageManager": "yarn"
 }
