@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 import People from './components/People';
 import PersonForm from './components/PersonForm';
 import peopleService from './services/people';
@@ -10,6 +11,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [filterName, setFilterName] = useState('');
   const [showAll, setShowAll] = useState(true);
+  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     peopleService.getAll()
@@ -23,42 +26,73 @@ const App = () => {
     return toFilter.includes(toSearch);
   });
 
+  const isAdded = (name, data) => {
+    const checkIsAdded = data.find((el) => el.name === name);
+    if (checkIsAdded === undefined) {
+      return false;
+    }
+    return true;
+  };
+
   const addContact = (event) => {
     event.preventDefault();
-    const shouldUpdate = people.filter((person) => person.name.includes(newName));
-
-    if (shouldUpdate.length === 1) {
-      const confirm = window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`);
-
+    // Check if the contact already exists
+    const toUpdate = people.filter((p) => p.name.includes(newName));
+    if (toUpdate.length === 1) {
+      const confirm = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`);
       if (confirm) {
-        const updatedPeople = people.filter((person) => person.id !== shouldUpdate[0].id);
-        setPeople(updatedPeople);
         peopleService
-          .update(shouldUpdate[0].id, {
-            ...shouldUpdate[0],
+          .update(toUpdate[0].id, {
+            ...toUpdate[0],
             number: newNumber,
           })
           .then((updatedPerson) => {
-            let updatedState = people.filter((person) => person.id !== updatedPerson.id);
+            let updatedState = people.filter((p) => p.id !== updatedPerson.id);
             updatedState = [...updatedState, updatedPerson];
             setPeople(updatedState);
             setNewName('');
             setNewNumber('');
-          });
-      } else {
-        const peopleObject = {
-          name: newName,
-          number: newNumber,
-        };
-        peopleService
-          .create(peopleObject)
-          .then((returnedPerson) => {
-            if (_existingContact(newName, people)) alert(`${newName} is already added to phonebook`);
-            else setPeople([...people, { name: newName, number: newNumber }]);
-            setNewName('');
-            setNewNumber('');
+            setNotificationMessage(`Added ${updatedPerson.name}`);
+            setTimeout(() => {
+              setNotificationMessage(null);
+            }, 2000);
+          })
+          .catch((err) => {
+            setErrorMessage(`Information of ${newName} has already been removed from server`);
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000);
           });
       }
+    } else {
+      // if not, save the person
+      const personObject = {
+        name: newName,
+        number: newNumber,
+        id: people[people.length - 1].id + 1,
+      };
+
+      peopleService
+        .create(personObject)
+        .then((returnedNote) => {
+          if (isAdded(newName, people)) {
+            alert(`${newName} is already added to phonebook`);
+          } else {
+            setPeople([...people, { name: newName, number: newNumber }]);
+          }
+          setNotificationMessage(`Added ${newName}`);
+          setTimeout(() => {
+            setNotificationMessage(null);
+          }, 2000);
+          setNewName('');
+          setNewNumber('');
+        })
+        .catch((err) => {
+          setErrorMessage(`Information of ${newName} has already been removed from server`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        });
     }
   };
 
@@ -69,13 +103,6 @@ const App = () => {
         const updatedPeople = people.filter((person) => person.id !== id);
         setPeople(updatedPeople);
       });
-  };
-
-  const _existingContact = (name, data) => {
-    const exists = data.find((entry) => entry.name === name);
-
-    if (exists === undefined) return false;
-    return true;
   };
 
   const handleNameChange = (event) => {
@@ -91,11 +118,17 @@ const App = () => {
     setShowAll(false);
   };
 
+
   return (
     <div>
       <h2>Phonebook</h2>
 
+      <Notification message={notificationMessage} />
+      <Notification type="error" message={errorMessage} />
+
       <Filter onChangeHandler={handleFilter} />
+
+      <h2>add a new</h2>
 
       <PersonForm
         onSubmitHandler={addContact}
