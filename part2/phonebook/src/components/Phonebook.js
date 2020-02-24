@@ -8,27 +8,22 @@ const Phonebook = ({
   setFilterName,
   showAll,
   setShowAll,
-  persons,
-  setPersons,
+  people,
+  setPeople,
 }) => {
-
   const addName = (event) => {
     event.preventDefault();
-    if (_existingContact(newName, persons))
-      alert(`${newName} is already added to phonebook`);
-    else
-      setPersons(persons.concat({ name: newName, number: newNumber }));
+    if (_existingContact(newName, people)) alert(`${newName} is already added to phonebook`);
+    else setPeople(people.concat({ name: newName, number: newNumber }));
     setNewName('');
     setNewNumber('');
   };
 
   const _existingContact = (name, data) => {
-    let exists = data.find(entry => entry.name === name);
+    const exists = data.find((entry) => entry.name === name);
 
-    if (exists === undefined)
-      return false;
-    else
-      return true;
+    if (exists === undefined) return false;
+    return true;
   };
 
   const handleNameChange = (event) => {
@@ -47,8 +42,14 @@ const Phonebook = ({
   return (
     <>
       <form onSubmit={addName}>
-        <div>name: <input value={newName} onChange={handleNameChange} /></div>
-        <div>number: <input value={newNumber} onChange={handleNewNumber} /></div>
+        <div>
+          name:
+          <input value={newName} onChange={handleNameChange} />
+        </div>
+        <div>
+          number:
+          <input value={newNumber} onChange={handleNewNumber} />
+        </div>
         <div>
           <button type="submit">add</button>
         </div>
